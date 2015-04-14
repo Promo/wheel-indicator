@@ -96,18 +96,7 @@
         },
 
         triggerEvent: function() {
-            if (document.createEvent) {
-                triggerEvent = function() {
-                    this.direction === 'up' ? document.dispatchEvent(new CustomEvent('scrollUp')) : document.dispatchEvent(new CustomEvent('scrollDown'));
-                }
-            } else {
-                triggerEvent = function() {
-                    //ie trigger
-                    //this.direction === 'up' ? document.dispatchEvent(new CustomEvent('scrollUp')) : document.dispatchEvent(new CustomEvent('scrollDown'));
-                }
-            }
-
-            triggerEvent();
+            this.direction === 'up' ? $(document).trigger('scrollUp') : $(document).trigger('scrollDown');
         }
     };
 

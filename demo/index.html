@@ -11,15 +11,15 @@
 	<script src="../wheel-indicator.js"></script>
 <script>
 
-function show(d){
-	$('body').append('<div>' + d + '</div>');
-}
+    function show(d){
+        $('body').append('<div>' + d + '</div>');
+    }
 
-    document.addEventListener('scrollDown', function() {
+    $(document).on('scrollDown', function() {
         $('body').append('<div>scrollDown</div>');
     });
 
-    document.addEventListener('scrollUp', function() {
+    $(document).on('scrollUp', function() {
         $('body').append('<div>scrollUp</div>');
     });
 
