@@ -1,31 +1,25 @@
-
 <!DOCTYPE html>
 <html>
 <head>
-	<style type="text/css">
-	body {
-		-height: 2000px;
-	}
-	</style>
-	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
-	<script src="../wheel-indicator.js"></script>
-<script>
+    <script src="../wheel-indicator.js"></script>
+    <script>
+        window.addEventListener('scrollDown', function() {
+            writeText('scrollDown')
+        });
 
-    function show(d){
-        $('body').append('<div>' + d + '</div>');
-    }
+        window.addEventListener('scrollUp', function() {
+            writeText('scrollUp')
+        });
 
-    $(document).on('scrollDown', function() {
-        $('body').append('<div>scrollDown</div>');
-    });
-
-    $(document).on('scrollUp', function() {
-        $('body').append('<div>scrollUp</div>');
-    });
-
-</script>
+        function writeText(text) {
+            var log = document.getElementById('log');
+            log.innerHTML += '<li>' + text + '</li>';
+        }
+    </script>
 </head>
 <body>
-<a href="http://jsfiddle.net/r9zc2bkz/22/" >http://jsfiddle.net/r9zc2bkz/22/</a>
+    <a href="http://jsfiddle.net/r9zc2bkz/22/">http://jsfiddle.net/r9zc2bkz/22/</a>
+    <ul id="log"></ul>
+
 </body>
 </html>
