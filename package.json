@@ -1,0 +1,20 @@
+{
+  "name": "wheel-indicator",
+  "version": "1.0.0",
+  "description": "normalizes the mousewheel",
+  "main": "wheel-indicator.js",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:Promo/wheel-indicator.git"
+  },
+  "keywords": [
+    "wheel",
+    "mousewheel"
+  ],
+  "author": "Ruslan Krohin <ulitcos@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Promo/wheel-indicator/issues"
+  },
+  "homepage": "https://github.com/Promo/wheel-indicator"
+}
