@@ -2,30 +2,29 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<style type="text/css">
-	body {
-		-height: 2000px;
-	}
-	</style>
 	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
 	<script src="../wheel-indicator.js"></script>
-<script>
 
-    function show(d){
-        $('body').append('<div>' + d + '</div>');
-    }
+    <style>
+        .customZone {
+            width: 200px;
+            height: 200px;
+            border: 1px solid #000;
+            overflow: auto;
+        }
 
-    $(document).on('scrollDown', function() {
-        $('body').append('<div>scrollDown</div>');
-    });
-
-    $(document).on('scrollUp', function() {
-        $('body').append('<div>scrollUp</div>');
-    });
-
-</script>
+    </style>
 </head>
 <body>
-<a href="http://jsfiddle.net/r9zc2bkz/22/" >http://jsfiddle.net/r9zc2bkz/22/</a>
+    Custom block indicator
+    <div class="customZone"></div>
+
+<script>
+    var indicator = new WheelIndicator(document.querySelector('.customZone'));
+
+    indicator.on(function(e){
+        document.querySelector('.customZone').innerHTML = e.direction;
+    });
+</script>
 </body>
 </html>

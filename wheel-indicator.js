@@ -1,4 +1,4 @@
-(function() {
+var WheelIndicator = (function() {
     // console.log('mousewheel' in document);
     // console.log('onwheel' in document);
     // console.log('onmousewheel' in document);
@@ -9,20 +9,28 @@
     
     // console.log('mousewheel' in document);
 
-    var wheelIndicator = {
-        last5values: [ 0, 0, 0, 0, 0 ],
-        memoryAcceleration: [ 0, 0 , 0 ],
-        isAcceleration: false,
-        isStopped: true,
-        direction: '',
-        delta: '',
-        timer: '',
-        eventWheel: 'onwheel' in document ? 'wheel' : 'mousewheel',
+    function Module(elem){
+        this.last5values = [ 0, 0, 0, 0, 0 ];
+        this.memoryAcceleration = [ 0, 0 , 0 ];
+        this.isAcceleration = false;
+        this.isStopped = true;
+        this.direction = '';
+        this.delta = '';
+        this.timer = '';
+        this.eventWheel = 'onwheel' in document ? 'wheel' : 'mousewheel';
+
+        this.addEvent(elem, this.eventWheel, function(event) {
+            this.processDelta(this.getDeltaY(event));
+        }.bind(this));
+    }
+
+    Module.prototype = {
+        Constructor: Module,
 
         addEvent: function(elem, type, handler){
             if(window.addEventListener) {
                 elem.addEventListener(type, handler, false);
-            } 
+            }
             if(window.attachEvent) {
                 elem.attachEvent('on' + type, handler);
             }
@@ -30,15 +38,15 @@
 
         getDeltaY: function(event) {
             if(event.wheelDelta) {
-                wheelIndicator.getDeltaY = function(event) {
+                this.getDeltaY = function(event) {
                     return event.wheelDelta / -120;
                 }
             } else {
-                wheelIndicator.getDeltaY = function(event) {
+                this.getDeltaY = function(event) {
                     return event.deltaY;
                 }
             }
-            return wheelIndicator.getDeltaY(event);
+            return this.getDeltaY(event);
         },
 
         processDelta: function(deltaY)  {
@@ -96,11 +104,28 @@
         },
 
         triggerEvent: function() {
-            this.direction === 'up' ? $(document).trigger('scrollUp') : $(document).trigger('scrollDown');
+            var event = {};
+            event.direction = this.direction === 'up' ? 'backward' : 'forward';
+            this.callback(event);
+        },
+
+        on: function(cb){
+            this.callback = cb || function(){};
         }
     };
 
-    wheelIndicator.addEvent(document, wheelIndicator.eventWheel, function(event) {
-        wheelIndicator.processDelta(wheelIndicator.getDeltaY(event));
-    });
+    //var wheelIndicator = {
+    //    last5values: [ 0, 0, 0, 0, 0 ],
+    //    memoryAcceleration: [ 0, 0 , 0 ],
+    //    isAcceleration: false,
+    //    isStopped: true,
+    //    direction: '',
+    //    delta: '',
+    //    timer: '',
+    //    eventWheel: 'onwheel' in document ? 'wheel' : 'mousewheel',
+    //
+    //
+    //};
+
+    return Module;
 }());
