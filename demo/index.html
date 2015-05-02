@@ -23,7 +23,7 @@
     var indicator = new WheelIndicator(document.querySelector('.customZone'));
 
     indicator.on(function(e){
-        document.querySelector('.customZone').innerHTML = e.direction;
+        document.querySelector('.customZone').innerHTML = document.querySelector('.customZone').innerHTML + e.direction + '<br />';
     });
 </script>
 </body>
