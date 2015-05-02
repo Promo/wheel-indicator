@@ -64,4 +64,23 @@ gulp.task('amd', function () {
         .pipe(gulp.dest('dist/amd'));
 });
 
-gulp.task('default', [ 'compress', 'jquery', 'commonjs', 'amd' ]);
+gulp.task('es6', function () {
+    return gulp.src('systems/es6.js')
+        .pipe(gfi({
+            "/* Wheel-indicator */": "lib/wheel-indicator.js"
+        }))
+        .pipe(rename({
+            basename: 'wheel-indicator',
+            extname: '.js'
+        }))
+        .pipe(gulp.dest('dist/es6'))
+
+    //uglify of es6 modules doesn't work yet
+    //    .pipe(uglify())
+        //.pipe(rename({
+        //    extname: '.min.js'
+        //}))
+        //.pipe(gulp.dest('dist/es6'));
+});
+
+gulp.task('default', [ 'compress', 'jquery', 'commonjs', 'amd', 'es6' ]);
