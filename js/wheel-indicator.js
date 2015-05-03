@@ -54,11 +54,11 @@ var WheelIndicator = (function() {
         this.prevent = true;
     }
 
-    function preventDefault(e){
-        if(window.event) {
-            window.event.returnValue = false;
-        } else if(e.preventDefault) {
-            e.preventDefault();
+    function preventDefault(event){
+        event = event || window.event;
+
+        if (event.preventDefault) {
+            event.preventDefault();
         } else {
             event.returnValue = false;
         }
