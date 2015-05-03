@@ -2,66 +2,50 @@ var gulp = require('gulp');
 var uglify = require('gulp-uglify');
 var rename = require('gulp-rename');
 var gfi = require('gulp-file-insert');
+var header = require('gulp-header');
+var pkg = require('./package.json');
+
+var banner = ['/**',
+    ' * <%= pkg.name %> - <%= pkg.description %>',
+    ' * @version v<%= pkg.version %>',
+    ' * @link <%= pkg.homepage %>',
+    ' * @license <%= pkg.license %>',
+    ' */',
+    '',
+    ''].join('\n');
 
 gulp.task('compress', function() {
     gulp.src('lib/*.js')
+        .pipe(header(banner, { pkg : pkg } ))
+        .pipe(gulp.dest('dist'))
         .pipe(uglify())
+        .pipe(header(banner, { pkg : pkg } ))
         .pipe(rename({
             extname: '.min.js'
         }))
         .pipe(gulp.dest('dist'))
 });
 
-gulp.task('jquery', function () {
-    return gulp.src('systems/jquery.js')
-        .pipe(gfi({
-            "/* Wheel-indicator */": "lib/wheel-indicator.js"
-        }))
-        .pipe(rename({
-            basename: 'wheel-indicator',
-            prefix: 'jquery.',
-            extname: '.js'
-        }))
-        .pipe(gulp.dest('dist/jquery'))
-        .pipe(uglify())
-        .pipe(rename({
-            extname: '.min.js'
-        }))
-        .pipe(gulp.dest('dist/jquery'));
-});
-
-gulp.task('commonjs', function () {
-    return gulp.src('systems/common.js')
-        .pipe(gfi({
-            "/* Wheel-indicator */": "lib/wheel-indicator.js"
-        }))
-        .pipe(rename({
-            basename: 'wheel-indicator',
-            extname: '.js'
-        }))
-        .pipe(gulp.dest('dist/commonjs'))
-        .pipe(uglify())
-        .pipe(rename({
-            extname: '.min.js'
-        }))
-        .pipe(gulp.dest('dist/commonjs'));
-});
-
-gulp.task('amd', function () {
-    return gulp.src('systems/amd.js')
-        .pipe(gfi({
-            "/* Wheel-indicator */": "lib/wheel-indicator.js"
-        }))
-        .pipe(rename({
-            basename: 'wheel-indicator',
-            extname: '.js'
-        }))
-        .pipe(gulp.dest('dist/amd'))
-        .pipe(uglify())
-        .pipe(rename({
-            extname: '.min.js'
-        }))
-        .pipe(gulp.dest('dist/amd'));
+['jquery', 'commonjs', 'amd'].forEach(function(system){
+    gulp.task(system, function () {
+        return gulp.src('systems/' + system + '.js')
+            .pipe(gfi({
+                "/* Wheel-indicator */": "lib/wheel-indicator.js"
+            }))
+            .pipe(header(banner, { pkg : pkg } ))
+            .pipe(rename({
+                basename: 'wheel-indicator',
+                prefix: system + '.',
+                extname: '.js'
+            }))
+            .pipe(gulp.dest('dist/' + system))
+            .pipe(uglify())
+            .pipe(header(banner, { pkg : pkg } ))
+            .pipe(rename({
+                extname: '.min.js'
+            }))
+            .pipe(gulp.dest('dist/' + system));
+    });
 });
 
 gulp.task('es6', function () {
@@ -69,6 +53,7 @@ gulp.task('es6', function () {
         .pipe(gfi({
             "/* Wheel-indicator */": "lib/wheel-indicator.js"
         }))
+        .pipe(header(banner, { pkg : pkg } ))
         .pipe(rename({
             basename: 'wheel-indicator',
             extname: '.js'

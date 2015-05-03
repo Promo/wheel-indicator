@@ -5,7 +5,8 @@
  * @license MIT
  */
 
-var WheelIndicator = (function() {
+define('wheel-indicator', function () {
+    var WheelIndicator = (function() {
     var eventWheel = 'onwheel' in document ? 'wheel' : 'mousewheel';
 
     function Module(elem){
@@ -138,4 +139,5 @@ var WheelIndicator = (function() {
     return Module;
 }());
 
-export default WheelIndicator;
+    return WheelIndicator;
+});
