@@ -10,10 +10,15 @@
             this.direction = '';
             this.delta = '';
             this.timer = '';
+            this.prevent = false;
 
             var self = this;
             addEvent(elem, eventWheel, function(event) {
-                processDelta(getDeltaY(event), self);
+                processDelta(event, self);
+
+                if (self.prevent) {
+                    event.preventDefault();
+                }
             });
         }
 
@@ -22,13 +27,17 @@
 
             on: function(cb){
                 this.callback = cb || function(){};
+
+                return this;
             }
         };
 
-        function triggerEvent(self){
-            var event = {};
+        function triggerEvent(self, event){
+            event.prevent = function(){
+                preventDefault.call(self);
+            };
             event.direction = self.direction;
-            self.callback(event);
+            self.callback.call(this, event);
         }
 
         var getDeltaY = function(event){
@@ -44,8 +53,14 @@
             getDeltaY(event);
         };
 
-        function processDelta(deltaY, self)  {
-            var stepAcceleration = 0, i;
+        function preventDefault(){
+            this.prevent = true;
+        }
+
+        function processDelta(event, self) {
+            var stepAcceleration = 0,
+                deltaY = getDeltaY(event),
+                i;
 
             self.direction = deltaY > 0 ? self.direction = 'down' : self.direction = 'up';
             self.delta = Math.abs(deltaY);
@@ -60,7 +75,7 @@
             }, 200);
 
             if(self.isStopped) {
-                triggerEvent(self);
+                triggerEvent(self, event);
                 self.isStopped = false;
                 self.isAcceleration = true;
                 stepAcceleration = 1;
@@ -68,6 +83,7 @@
                 self.memoryAcceleration.shift();
                 self.memoryAcceleration.push(stepAcceleration);
             } else {
+
                 self.last5values.shift();
                 self.last5values.push(self.delta);
 
@@ -91,7 +107,7 @@
                     //Произошло ускорение
                     if(!self.isAcceleration) {
                         self.isAcceleration = true;
-                        triggerEvent(self);
+                        triggerEvent(self, event);
                     }
                 }
             }
@@ -100,8 +116,7 @@
         function addEvent(elem, type, handler){
             if(window.addEventListener) {
                 elem.addEventListener(type, handler, false);
-            }
-            if(window.attachEvent) {
+            } else if (window.attachEvent) {
                 elem.attachEvent('on' + type, handler);
             }
         }
