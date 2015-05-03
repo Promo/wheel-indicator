@@ -1,6 +1,6 @@
 /**
  * wheel-indicator - normalizes an inertial mousewheel
- * @version v1.1.0
+ * @version v1.1.2
  * @link https://github.com/Promo/wheel-indicator
  * @license MIT
  */
@@ -55,7 +55,7 @@ define('wheel-indicator', function () {
                 return event.deltaY;
             }
         }
-        getDeltaY(event);
+        return getDeltaY(event);
     };
 
     function setPreventDefault(){
@@ -78,6 +78,7 @@ define('wheel-indicator', function () {
             i;
 
         self.direction = deltaY > 0 ? self.direction = 'down' : self.direction = 'up';
+
         self.delta = Math.abs(deltaY);
 
         clearTimeout(self.timer);
