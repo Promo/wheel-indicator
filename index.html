@@ -33,36 +33,34 @@
 
     <section class="main-content">
       <h3>
-      <a id="welcome-to-github-pages" class="anchor" href="#welcome-to-github-pages" aria-hidden="true"><span class="octicon octicon-link"></span></a>wheel-indicator</h3>
-      <p>
-        Нормализует работу инерционных устройств ввода (таких, как тачпад, magic mouse), генерируя событие только тогда, когда
-        пользователь сделал новый жест (по сути swipe). Плагин избавляет от проблем генерации множества ненужных событий такого рода девайсами.</p>
+      <a id="welcome-to-github-pages" class="anchor" href="#welcome-to-github-pages" aria-hidden="true"><span class="octicon octicon-link"></span></a>Wheel-indicator</h3>
+      <p>Normalizes the work of the inertial wheels (such as touchpads, the magic mouse, etc.) by generating event only when user makes new movement (like a swipe on a touchscreen).</p>
 
-      <h4>Подключаем</h4>
+      <h4>Connection</h4>
 
-      <pre><code>&lt;script src=&quot;whell-indicator.js&quot;&gt;&lt;/script&gt;</code></pre>
+      <pre><code>&lt;script src=&quot;wheel-indicator.js&quot;&gt;&lt;/script&gt;</code></pre>
 
-      <h4>Используем</h4>
-      <h5>globals</h5>
+      <h4>Usage</h4>
+      <h5>Globals</h5>
       <pre>
         <code>var indicator = new WheelIndicator(document.querySelector('.element'));
 
         indicator.on(function(e){
-          e.prevent(); //Если нужно отменить скроллинг
+          e.prevent(); //If necessary prevent the work of the wheel
           console.log(e.direction); // "up" or "down"
         });
       </code></pre>
 
-      <h5>jquery</h5>
+      <h5>Jquery</h5>
       <pre>
         <code>$('.jquery').on('wheel-indicator', function(e){
           e.prevent();
           console.log(e.direction); // "up" or "down"
         });</code></pre>
 
-      <h3>Примеры</h3>
+      <h3>Examples</h3>
 
-      Обработка на блоке
+      Listener on the block
       <pre>
 <code>var indicator = new WheelIndicator(document.querySelector('.customZone'));
 
@@ -70,11 +68,12 @@ indicator.on(function(e){
   e.prevent();
   document.querySelector('.customZone').innerHTML = document.querySelector('.customZone').innerHTML + e.direction + '&lt;br /&gt;';
 });</code></pre>
-      <div class="customZone"></div>
 
+      <div class="customZone"></div>
+      Also you can set `document` as first argument;
       <br /><br />
 
-      jquery
+      Jquery
       <pre>
 <code>$('.jquery').on('wheel-indicator', function(e){
   e.prevent();
@@ -97,7 +96,7 @@ indicator.on(function(e){
       </script>
 
       <footer class="site-footer">
-        <span class="site-footer-owner"><a href="https://github.com/Promo/wheel-indicator">Wheel-indicator</a> поддерживается организацией <a href="https://github.com/Promo">Promo</a>.</span>
+        <span class="site-footer-owner"><a href="https://github.com/Promo/wheel-indicator">Wheel-indicator</a> maintaining by <a href="https://github.com/Promo">Promo</a>.</span>
       </footer>
 
     </section>
