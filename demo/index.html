@@ -1,25 +1,40 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <script src="../wheel-indicator.js"></script>
-    <script>
-        window.addEventListener('scrollDown', function() {
-            writeText('scrollDown')
-        });
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
+	<script src="../lib/wheel-indicator.js"></script>
+	<script src="../dist/jquery.wheel-indicator.js"></script>
 
-        window.addEventListener('scrollUp', function() {
-            writeText('scrollUp')
-        });
-
-        function writeText(text) {
-            var log = document.getElementById('log');
-            log.innerHTML += '<li>' + text + '</li>';
+    <style>
+        .customZone, .jquery {
+            width: 200px;
+            height: 200px;
+            border: 1px solid #000;
+            overflow: auto;
         }
-    </script>
+    </style>
 </head>
 <body>
-    <a href="http://jsfiddle.net/r9zc2bkz/22/">http://jsfiddle.net/r9zc2bkz/22/</a>
-    <ul id="log"></ul>
+    Custom block indicator
+    <div class="customZone"></div>
 
+    <br /><br />
+    jquery
+    <code>
+
+    </code>
+    <div class="jquery"></div>
+
+<script>
+    var indicator = new WheelIndicator(document.querySelector('.customZone'));
+
+    indicator.on(function(e){
+        document.querySelector('.customZone').innerHTML = document.querySelector('.customZone').innerHTML + e.direction + '<br />';
+    });
+
+    $('.jquery').on('wheel-indicator', function(e){
+        $(this).append(e.direction + '<br />');
+    });
+</script>
 </body>
 </html>
