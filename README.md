@@ -4,7 +4,7 @@
 
 ##Подключаем
 ```html
-<script src="whell-indicator.js"></script>
+<script src="wheel-indicator.js"></script>
 ```
 
 ##Используем
