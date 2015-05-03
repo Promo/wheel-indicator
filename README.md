@@ -9,16 +9,20 @@
 ```
 
 ##Используем
-```html
-<script>
-  window.addEventListener('scrollDown', function() {
-    yourFunctionOnScrollDown();
+**globals**  
+```javascript
+  var indicator = new WheelIndicator(document.querySelector('.element'));
+  
+  indicator.on(function(e){
+      console.log(e.direction); // "up" or "down"
   });
+```
 
-  window.addEventListener('scrollUp', function() {
-    yourFunctionOnScrollUp();
+**jquery**  
+```javascript
+  $('.jquery').on('wheel-indicator', function(e){
+      console.log(e.direction); // "up" or "down"
   });
-</script>
 ```
 
 ##Поддержка старых браузеров

@@ -73,7 +73,7 @@ gulp.task('es6', function () {
             basename: 'wheel-indicator',
             extname: '.js'
         }))
-        .pipe(gulp.dest('dist/es6'))
+        .pipe(gulp.dest('dist/es6'));
 
     //uglify of es6 modules doesn't work yet
     //    .pipe(uglify())
