@@ -1,3 +1,10 @@
+/**
+ * wheel-indicator - normalizes an inertial mousewheel
+ * @version v1.1.2
+ * @link https://github.com/Promo/wheel-indicator
+ * @license MIT
+ */
+
 ;(function($){
     var WheelIndicator = (function() {
         var eventWheel = 'onwheel' in document ? 'wheel' : 'mousewheel';
@@ -16,9 +23,7 @@
             addEvent(elem, eventWheel, function(event) {
                 processDelta(event, self);
 
-                if (self.prevent) {
-                    event.preventDefault();
-                }
+                if (self.prevent) preventDefault(event);
             });
         }
 
@@ -34,7 +39,7 @@
 
         function triggerEvent(self, event){
             event.prevent = function(){
-                preventDefault.call(self);
+                setPreventDefault.call(self);
             };
             event.direction = self.direction;
             self.callback.call(this, event);
@@ -50,11 +55,21 @@
                     return event.deltaY;
                 }
             }
-            getDeltaY(event);
+            return getDeltaY(event);
         };
 
-        function preventDefault(){
+        function setPreventDefault(){
             this.prevent = true;
+        }
+
+        function preventDefault(event){
+            event = event || window.event;
+
+            if (event.preventDefault) {
+                event.preventDefault();
+            } else {
+                event.returnValue = false;
+            }
         }
 
         function processDelta(event, self) {
@@ -63,6 +78,7 @@
                 i;
 
             self.direction = deltaY > 0 ? self.direction = 'down' : self.direction = 'up';
+
             self.delta = Math.abs(deltaY);
 
             clearTimeout(self.timer);
