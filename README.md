@@ -13,13 +13,15 @@
   var indicator = new WheelIndicator(document.querySelector('.element'));
   
   indicator.on(function(e){
-      console.log(e.direction); // "up" or "down"
+      e.prevent(); // если необходимо
+      console.log(e.direction); // "up" или "down"
   });
 ```
 
 **jquery**  
 ```javascript
   $('.jquery').on('wheel-indicator', function(e){
+      e.prevent(); // если необходимо
       console.log(e.direction); // "up" or "down"
   });
 ```
