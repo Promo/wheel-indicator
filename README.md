@@ -2,8 +2,7 @@
 
 
 # wheel-indicator
-Normalizes the work of the inertial wheels (such as touchpads, the magic mouse, etc.) by generating event only when user
- makes new movement (like a swipe on a touchscreen). 
+Generates event when user makes new movement (like a swipe on a touchscreen).
 
 ## Connection
 ```html
