@@ -16,6 +16,13 @@
       e.prevent(); // если необходимо
       console.log(e.direction); // "up" или "down"
   });
+
+  var bodyIndicator = new WheelIndicator();
+
+  bodyIndicator.on('up', function(e){
+      e.prevent(); // If necessary
+      //only up whell detect
+  });
 ```
 
 **jquery**  
