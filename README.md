@@ -18,6 +18,13 @@ Generates event when user makes new movement (like a swipe on a touchscreen).
       e.prevent(); // If necessary
       console.log(e.direction); // "up" or "down"
   });
+
+  var bodyIndicator = new WheelIndicator();
+
+  bodyIndicator.on('up', function(e){
+      e.prevent(); // If necessary
+      //only up whell detect
+  });
 ```
 
 **jquery**  
