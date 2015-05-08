@@ -1,6 +1,6 @@
 /**
  * wheel-indicator - normalizes an inertial mousewheel
- * @version v1.1.2
+ * @version v1.2.0
  * @link https://github.com/Promo/wheel-indicator
  * @license MIT
  */
@@ -17,8 +17,11 @@ var WheelIndicator = (function() {
         this.delta = '';
         this.timer = '';
         this.prevent = false;
+        this.callback = function(){};
 
         var self = this;
+        elem = elem || document;
+
         addEvent(elem, eventWheel, function(event) {
             processDelta(event, self);
 
@@ -30,7 +33,7 @@ var WheelIndicator = (function() {
         Constructor: Module,
 
         on: function(cb){
-            this.callback = cb || function(){};
+            if (cb) this.callback = cb;
 
             return this;
         }
@@ -138,3 +141,7 @@ var WheelIndicator = (function() {
 
     return Module;
 }());
+
+if (typeof exports === 'object') {
+    module.exports = WheelIndicator;
+}
