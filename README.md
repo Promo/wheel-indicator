@@ -8,22 +8,18 @@ Generates event when user makes new movement (like a swipe on a touchscreen).
 ```html
 <script src="wheel-indicator.js"></script>
 ```
+or if you use build system:
+```javascript
+var WheelIndicator = require('wheel-indicator');
+```
 
 ## Usage
 **globals**  
 ```javascript
   var indicator = new WheelIndicator(document.querySelector('.element'));
   
-  indicator.on(function(e){
-      e.prevent(); // If necessary
-      console.log(e.direction); // "up" or "down"
-  });
-```
-
-**jquery**  
-```javascript
-  $('.jquery').on('wheel-indicator', function(e){
-      e.prevent(); // If necessary
+  indicator.onGesture(function(e){
+      e.prevent(); // Disables mousewheel work
       console.log(e.direction); // "up" or "down"
   });
 ```
