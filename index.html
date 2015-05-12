@@ -10,7 +10,7 @@
     <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
 
     <style>
-      .customZone, .jquery {
+      .customZone {
         width: 200px;
         height: 200px;
         border: 1px solid #000;
@@ -18,9 +18,7 @@
       }
     </style>
 
-    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
     <script src="http://promo.github.io/wheel-indicator/js/wheel-indicator.js"></script>
-    <script src="http://promo.github.io/wheel-indicator/js/jquery.wheel-indicator.js"></script>
   </head>
   <body>
     <section class="page-header">
@@ -34,14 +32,15 @@
     <section class="main-content">
       <h3>
       <a id="welcome-to-github-pages" class="anchor" href="#welcome-to-github-pages" aria-hidden="true"><span class="octicon octicon-link"></span></a>Wheel-indicator</h3>
-      <p>Normalizes the work of the inertial wheels (such as touchpads, the magic mouse, etc.) by generating event only when user makes new movement (like a swipe on a touchscreen).</p>
+      <p>Generates event when user makes new movement (like a swipe on a touchscreen).</p>
 
       <h4>Connection</h4>
 
       <pre><code>&lt;script src=&quot;wheel-indicator.js&quot;&gt;&lt;/script&gt;</code></pre>
+      <p>or if you use build system:</p>
+      <pre><code>var WheelIndicator = require('wheel-indicator');</code></pre>
 
       <h4>Usage</h4>
-      <h5>Globals</h5>
       <pre>
         <code>var indicator = new WheelIndicator(document.querySelector('.element'));
 
@@ -50,13 +49,6 @@
           console.log(e.direction); // "up" or "down"
         });
       </code></pre>
-
-      <h5>Jquery</h5>
-      <pre>
-        <code>$('.jquery').on('wheel-indicator', function(e){
-          e.prevent();
-          console.log(e.direction); // "up" or "down"
-        });</code></pre>
 
       <h3>Examples</h3>
 
@@ -73,25 +65,12 @@ indicator.on(function(e){
       Also you can set `document` as first argument;
       <br /><br />
 
-      Jquery
-      <pre>
-<code>$('.jquery').on('wheel-indicator', function(e){
-  e.prevent();
-  $(this).append(e.direction + '&lt;br /&gt;');
-});</code></pre>
-      <div class="jquery"></div>
-
       <script>
         var indicator = new WheelIndicator(document.querySelector('.customZone'));
 
         indicator.on(function(e){
           e.prevent();
           document.querySelector('.customZone').innerHTML = document.querySelector('.customZone').innerHTML + e.direction + '<br />';
-        });
-
-        $('.jquery').on('wheel-indicator', function(e){
-          e.prevent();
-          $(this).append(e.direction + '<br />');
         });
       </script>
 

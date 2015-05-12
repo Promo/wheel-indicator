@@ -1,47 +1,86 @@
-/**
- * wheel-indicator - normalizes an inertial mousewheel
- * @version v1.1.2
- * @link https://github.com/Promo/wheel-indicator
- * @license MIT
- */
+var WheelIndicator = (function(win, doc) {
+    /**
+     * Merge defaults with user options
+     * @private
+     * @param {Object} defaults Default settings
+     * @param {Object} options User options
+     * @returns {Object} Merged values of defaults and options
+     */
+    var extend = function ( defaults, options ) {
+        var extended = {},
+            prop;
 
-var WheelIndicator = (function() {
-    var eventWheel = 'onwheel' in document ? 'wheel' : 'mousewheel';
+        for (prop in defaults) {
+            if (Object.prototype.hasOwnProperty.call(defaults, prop)) {
+                extended[prop] = defaults[prop];
+            }
+        }
 
-    function Module(elem){
+        for (prop in options) {
+            if (Object.prototype.hasOwnProperty.call(options, prop)) {
+                extended[prop] = options[prop];
+            }
+        }
+
+        return extended;
+    };
+
+    var eventWheel = 'onwheel' in doc ? 'wheel' : 'mousewheel',
+
+        DEFAULTS = {
+            callback: function(){},
+            elem: doc,
+            preventMouse: true
+        };
+
+    function Module(options){
+        this._options = extend(DEFAULTS, options);
         this.last5values = [ 0, 0, 0, 0, 0 ];
-        this.memoryAcceleration = [ 0, 0 , 0 ];
+        this.memoryAcceleration = [ 0, 0, 0 ];
         this.isAcceleration = false;
         this.isStopped = true;
         this.direction = '';
         this.delta = '';
         this.timer = '';
-        this.prevent = false;
+        this._isWorking = true;
 
         var self = this;
-        addEvent(elem, eventWheel, function(event) {
-            processDelta(event, self);
 
-            if (self.prevent) preventDefault(event);
+        addEvent(this._options.elem, eventWheel, function(event) {
+            if (self._isWorking) {
+                processDelta.call(self, event);
+
+                if (self._options.preventMouse) preventDefault(event);
+            }
         });
     }
 
     Module.prototype = {
         Constructor: Module,
 
-        on: function(cb){
-            this.callback = cb || function(){};
+        turnOn: function(){
+            this._isWorking = true;
+
+            return this;
+        },
+
+        turnOff: function(){
+            this._isWorking = false;
+
+            return this;
+        },
+
+        setOptions: function(options){
+            this._options = extend(this._options, options);
 
             return this;
         }
     };
 
-    function triggerEvent(self, event){
-        event.prevent = function(){
-            setPreventDefault.call(self);
-        };
-        event.direction = self.direction;
-        self.callback.call(this, event);
+    function triggerEvent(event){
+        event.direction = this.direction;
+
+        this._options.callback.call(this, event);
     }
 
     var getDeltaY = function(event){
@@ -57,12 +96,8 @@ var WheelIndicator = (function() {
         return getDeltaY(event);
     };
 
-    function setPreventDefault(){
-        this.prevent = true;
-    }
-
     function preventDefault(event){
-        event = event || window.event;
+        event = event || win.event;
 
         if (event.preventDefault) {
             event.preventDefault();
@@ -71,70 +106,75 @@ var WheelIndicator = (function() {
         }
     }
 
-    function processDelta(event, self) {
+    function processDelta(event) {
         var stepAcceleration = 0,
             deltaY = getDeltaY(event),
             i;
 
-        self.direction = deltaY > 0 ? self.direction = 'down' : self.direction = 'up';
+        this.direction = deltaY > 0 ? this.direction = 'down' : this.direction = 'up';
 
-        self.delta = Math.abs(deltaY);
+        this.delta = Math.abs(deltaY);
 
-        clearTimeout(self.timer);
+        clearTimeout(this.timer);
 
-        self.timer = setTimeout(function() {
+        var self = this;
+
+        this.timer = setTimeout(function() {
             self.last5values = [ 0, 0, 0, 0, 0 ];
-            self.memoryAcceleration = [ 0, 0 , 0 ];
+            self.memoryAcceleration = [ 0, 0, 0 ];
             self.isStopped = true;
             self.isAcceleration = false;
         }, 200);
 
-        if(self.isStopped) {
-            triggerEvent(self, event);
-            self.isStopped = false;
-            self.isAcceleration = true;
+        if(this.isStopped) {
+            triggerEvent.call(this, event);
+            this.isStopped = false;
+            this.isAcceleration = true;
             stepAcceleration = 1;
 
-            self.memoryAcceleration.shift();
-            self.memoryAcceleration.push(stepAcceleration);
+            this.memoryAcceleration.shift();
+            this.memoryAcceleration.push(stepAcceleration);
         } else {
-
-            self.last5values.shift();
-            self.last5values.push(self.delta);
+            this.last5values.shift();
+            this.last5values.push(this.delta);
 
             for(i = 5; i--; i == 1) {
-                if(self.last5values[i - 1] < self.last5values[i]) {
+                if(this.last5values[i - 1] < this.last5values[i]) {
                     stepAcceleration++;
                 }
             }
 
-            self.memoryAcceleration.shift();
-            self.memoryAcceleration.push(stepAcceleration);
+            this.memoryAcceleration.shift();
+            this.memoryAcceleration.push(stepAcceleration);
 
-            if( (self.memoryAcceleration[2] < self.memoryAcceleration[1]) &&
-                (self.memoryAcceleration[1] < self.memoryAcceleration[0])) {
+            if( (this.memoryAcceleration[2] < this.memoryAcceleration[1]) &&
+                (this.memoryAcceleration[1] < this.memoryAcceleration[0])) {
                 //Произошло затухание
-                self.isAcceleration = false;
+                this.isAcceleration = false;
             }
 
-            if( (self.memoryAcceleration[2] > self.memoryAcceleration[1]) &&
-                (self.memoryAcceleration[1] > self.memoryAcceleration[0])) {
+            if( (this.memoryAcceleration[2] > this.memoryAcceleration[1]) &&
+                (this.memoryAcceleration[1] > this.memoryAcceleration[0])) {
                 //Произошло ускорение
-                if(!self.isAcceleration) {
-                    self.isAcceleration = true;
-                    triggerEvent(self, event);
+                if(!this.isAcceleration) {
+                    this.isAcceleration = true;
+                    triggerEvent.call(this, event);
                 }
             }
         }
     }
 
     function addEvent(elem, type, handler){
-        if(window.addEventListener) {
+        if(win.addEventListener) {
             elem.addEventListener(type, handler, false);
-        } else if (window.attachEvent) {
+        } else if (win.attachEvent) {
             elem.attachEvent('on' + type, handler);
         }
     }
 
     return Module;
-}());
+}(window, document));
+
+if (typeof exports === 'object') {
+    module.exports = WheelIndicator;
+}
