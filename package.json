@@ -16,5 +16,12 @@
   "bugs": {
     "url": "https://github.com/Promo/wheel-indicator/issues"
   },
+  "scripts": {
+    "test": "mocha"
+  },
+  "devDependencies": {
+    "mocha": "^2.1.0",
+    "should": "^5.0.1"
+  },
   "homepage": "https://github.com/Promo/wheel-indicator"
 }
