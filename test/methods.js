@@ -4,7 +4,7 @@
 
 require('should');
 
-describe('Algorithm', function() {
+describe('Methods', function(){
     var testData = {
             down: {
                 moves: [ 'down' ],
@@ -35,31 +35,67 @@ describe('Algorithm', function() {
 
     global.document = {
         addEventListener: function(type, handler){
-            currentDeltaArr.forEach(function(delta){
+            setTimeout(function(){
                 handler({
-                    deltaY: delta
+                    deltaY: testData.down.delta
                 });
-            });
+            }, 0);
         }
     };
 
-    var WheelIndicator = require('../lib/wheel-indicator');
+    var WheelIndicator = require('../lib/wheel-indicator'),
+        result = [];
 
-    Object.keys(testData).forEach(function(key){
-        var test = testData[key],
-            result = [];
-
-        currentDeltaArr = test['delta'];
-
-        new WheelIndicator({
+    it('Correct working of turnOff()', function (done) {
+        var indicator = new WheelIndicator({
             elem: document,
-            callback: function(e){
-                result.push(e.direction);
+            callback: function(){
+                result.push('Happened');
             }
         });
 
-        it('Test: ' + key + ', Env: ' + test.device + ', moves: ' + test['moves'], function () {
-            result.should.be.eql(test['moves']);
+        indicator.turnOff();
+
+        setTimeout(function(){
+            result.should.be.eql([]);
+            done();
+        }, 0);
+    });
+
+    it('Correct working of turnOn()', function (done) {
+        var indicator = new WheelIndicator({
+            elem: document,
+            callback: function(){
+                result.push('Happened');
+            }
         });
+
+        indicator
+            .turnOff()
+            .turnOn();
+
+        setTimeout(function(){
+            result.should.be.eql(['Happened']);
+            done();
+        }, 0);
+    });
+
+    it('Correct working of setOptions() and getOption()', function (done) {
+        var indicator = new WheelIndicator({
+            elem: document,
+            preventMouse: true,
+            callback: function(){ throw new Error('Not supposed to happen'); }
+        });
+
+        indicator.setOptions({
+            preventMouse: false,
+            callback: function(){}
+        });
+
+        setTimeout(function(){
+            indicator.getOption('preventMouse').should.be.eql(false);
+
+            done();
+        }, 0);
     });
 });
