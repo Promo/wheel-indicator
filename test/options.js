@@ -1,10 +1,10 @@
 /* global describe, it, global */
 
-'use strict';
+//'use strict';
 
 require('should');
 
-describe('Algorithm', function() {
+describe('Options', function(){
     var testData = {
             down: {
                 moves: [ 'down' ],
@@ -32,34 +32,60 @@ describe('Algorithm', function() {
     global.window = {
         addEventListener: function(){}
     };
+    
+    it('Correct working of option "preventMouse"', function () {
+        var prevented = false;
 
-    global.document = {
-        addEventListener: function(type, handler){
-            currentDeltaArr.forEach(function(delta){
+        global.document = {
+            addEventListener: function(type, handler){
                 handler({
-                    deltaY: delta
+                    deltaY: testData.down.delta,
+                    preventDefault: function(){
+                        prevented = true;
+                    }
                 });
-            });
-        }
-    };
+            }
+        };
 
-    var WheelIndicator = require('../lib/wheel-indicator');
-
-    Object.keys(testData).forEach(function(key){
-        var test = testData[key],
-            result = [];
-
-        currentDeltaArr = test['delta'];
+        var WheelIndicator = require('../lib/wheel-indicator');
 
         new WheelIndicator({
             elem: document,
-            callback: function(e){
-                result.push(e.direction);
+            preventMouse: true
+        });
+
+        prevented.should.be.eql(true);
+
+        prevented = true;
+
+        new WheelIndicator({
+            elem: document,
+            preventMouse: false
+        });
+
+        prevented.should.be.eql(true);
+    });
+
+    it('Correct working of option "callback"', function () {
+        var correctCb = false;
+
+        global.document = {
+            addEventListener: function(type, handler){
+                handler({
+                    deltaY: testData.down.delta
+                });
+            }
+        };
+
+        var WheelIndicator = require('../lib/wheel-indicator');
+
+        new WheelIndicator({
+            elem: document,
+            callback: function(){
+                correctCb = true;
             }
         });
 
-        it('Test: ' + key + ', Env: ' + test.device + ', moves: ' + test['moves'], function () {
-            result.should.be.eql(test['moves']);
-        });
+        correctCb.should.be.eql(true);
     });
 });

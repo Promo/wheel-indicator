@@ -1,6 +1,6 @@
 {
   "name": "wheel-indicator",
-  "version": "1.3.1",
+  "version": "1.0.0",
   "description": "normalizes an inertial mousewheel",
   "main": "dist/wheel-indicator",
   "repository": {
@@ -12,6 +12,9 @@
     "mousewheel"
   ],
   "author": "Ruslan Krohin <ulitcos@gmail.com>",
+  "contributors": [
+    "Anton Grischenko <f0rmateg@yandex.ru>"
+  ],
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/Promo/wheel-indicator/issues"
