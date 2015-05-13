@@ -3,6 +3,8 @@ Generates event when user makes new movement (like a swipe on a touchscreen).
 
 [![Build Status][travis-image]][travis-url]
 
+![trackpad](https://cloud.githubusercontent.com/assets/769992/7619952/b77d9ce6-f9d5-11e4-8ed1-bc01dd972092.jpg)
+
 ## Connection
 ```html
 <script src="wheel-indicator.js"></script>
