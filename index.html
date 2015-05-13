@@ -42,23 +42,26 @@
 
       <h4>Usage</h4>
       <pre>
-        <code>var indicator = new WheelIndicator(document.querySelector('.element'));
+<code>var indicator = new WheelIndicator({
+  elem: document.querySelector('.element'),
+  callback: function(e){
+     console.log(e.direction) // "up" or "down"
+  }
+});
 
-        indicator.on(function(e){
-          e.prevent(); //If necessary prevent the work of the wheel
-          console.log(e.direction); // "up" or "down"
-        });
-      </code></pre>
+//The method call
+indicator.getOption('preventMouse'); // true
+</code></pre>
 
       <h3>Examples</h3>
 
       Listener on the block
       <pre>
-<code>var indicator = new WheelIndicator(document.querySelector('.customZone'));
-
-indicator.on(function(e){
-  e.prevent();
-  document.querySelector('.customZone').innerHTML = document.querySelector('.customZone').innerHTML + e.direction + '&lt;br /&gt;';
+<code>var indicator = new WheelIndicator({
+  elem: document.querySelector('.customZone'),
+  callback: function(e){
+    document.querySelector('.customZone').innerHTML = document.querySelector('.customZone').innerHTML + e.direction + '&lt;br /&gt;';
+  }
 });</code></pre>
 
       <div class="customZone"></div>
@@ -66,11 +69,11 @@ indicator.on(function(e){
       <br /><br />
 
       <script>
-        var indicator = new WheelIndicator(document.querySelector('.customZone'));
-
-        indicator.on(function(e){
-          e.prevent();
-          document.querySelector('.customZone').innerHTML = document.querySelector('.customZone').innerHTML + e.direction + '<br />';
+        var indicator = new WheelIndicator({
+          elem: document.querySelector('.customZone'),
+          callback: function(e){
+            document.querySelector('.customZone').innerHTML = document.querySelector('.customZone').innerHTML + e.direction + '<br />';
+          }
         });
       </script>
 
@@ -81,4 +84,3 @@ indicator.on(function(e){
     </section>
   </body>
 </html>
-

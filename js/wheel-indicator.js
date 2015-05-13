@@ -74,6 +74,14 @@ var WheelIndicator = (function(win, doc) {
             this._options = extend(this._options, options);
 
             return this;
+        },
+
+        getOption: function(option){
+            var neededOption = this._options[option];
+
+            if (neededOption !== undefined) return neededOption;
+
+            throw new Error('Unknown option');
         }
     };
 
