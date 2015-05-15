@@ -1,4 +1,6 @@
 # wheel-indicator
+
+[![Join the chat at https://gitter.im/Promo/wheel-indicator](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/Promo/wheel-indicator?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 Generates event when user makes new movement (like a swipe on a touchscreen).
 
 [![Build Status][travis-image]][travis-url]
