@@ -22,7 +22,7 @@ var WheelIndicator = require('wheel-indicator');
       console.log(e.direction) // "up" or "down"
     }
   });
-  
+
   //The method call
   indicator.getOption('preventMouse'); // true
 ```
