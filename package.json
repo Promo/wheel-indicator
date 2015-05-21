@@ -1,6 +1,6 @@
 {
   "name": "wheel-indicator",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "normalizes an inertial mousewheel",
   "main": "dist/wheel-indicator",
   "repository": {
@@ -23,7 +23,7 @@
     "test": "mocha"
   },
   "devDependencies": {
-    "mocha": "^2.1.0",
+    "mocha": "^2.2.5",
     "should": "^5.0.1"
   },
   "homepage": "https://github.com/Promo/wheel-indicator"
