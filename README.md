@@ -1,5 +1,5 @@
 # wheel-indicator
-Generates event when user makes new movement (like a swipe on a touchscreen).
+Generates event when user makes new movement (like a `touchstart` on a touchscreen).
 
 [![Build Status][travis-image]][travis-url]
 
@@ -22,7 +22,7 @@ var WheelIndicator = require('wheel-indicator');
       console.log(e.direction) // "up" or "down"
     }
   });
-  
+
   //The method call
   indicator.getOption('preventMouse'); // true
 ```
