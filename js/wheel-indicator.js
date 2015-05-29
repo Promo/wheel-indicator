@@ -1,12 +1,12 @@
+/**
+ * Generates event when user makes new movement (like a swipe on a touchscreen).
+ * @version 1.0.2
+ * @link https://github.com/Promo/wheel-indicator
+ * @license MIT
+ */
+
 var WheelIndicator = (function(win, doc) {
-    /**
-     * Merge defaults with user options
-     * @private
-     * @param {Object} defaults Default settings
-     * @param {Object} options User options
-     * @returns {Object} Merged values of defaults and options
-     */
-    var extend = function ( defaults, options ) {
+    function extend ( defaults, options ) {
         var extended = {},
             prop;
 
@@ -23,20 +23,19 @@ var WheelIndicator = (function(win, doc) {
         }
 
         return extended;
-    };
+    }
 
     var eventWheel = 'onwheel' in doc ? 'wheel' : 'mousewheel',
 
-        DEFAULTS = {
-            callback: function(){},
-            elem: doc,
-            preventMouse: true
-        };
+    DEFAULTS = {
+        callback: function(){},
+        elem: doc,
+        preventMouse: true
+    };
 
     function Module(options){
         this._options = extend(DEFAULTS, options);
-        this.last5values = [ 0, 0, 0, 0, 0 ];
-        this.memoryAcceleration = [ 0, 0, 0 ];
+        this.deltaArray = [ 0, 0, 0 ];
         this.isAcceleration = false;
         this.isStopped = true;
         this.direction = '';
@@ -91,10 +90,10 @@ var WheelIndicator = (function(win, doc) {
         this._options.callback.call(this, event);
     }
 
-    var getDeltaY = function(event){
+    function getDeltaY(event){
         if(event.wheelDelta) {
             getDeltaY = function(event) {
-                return event.wheelDelta / -120;
+                return event.wheelDelta;
             }
         } else {
             getDeltaY = function(event) {
@@ -102,7 +101,7 @@ var WheelIndicator = (function(win, doc) {
             }
         }
         return getDeltaY(event);
-    };
+    }
 
     function preventDefault(event){
         event = event || win.event;
@@ -115,60 +114,92 @@ var WheelIndicator = (function(win, doc) {
     }
 
     function processDelta(event) {
-        var stepAcceleration = 0,
-            deltaY = getDeltaY(event),
-            i;
+        var
+            self = this,
+            delta = event.deltaY,
+            direction = event.deltaY > 0 ? 'down' : 'up',
+            arrayLength = self.deltaArray.length,
+            changedDirection = false,
+            repeatDirection = 0,
+            sustainableDirection, i;
 
-        this.direction = deltaY > 0 ? this.direction = 'down' : this.direction = 'up';
+        clearTimeout(self.timer);
 
-        this.delta = Math.abs(deltaY);
-
-        clearTimeout(this.timer);
-
-        var self = this;
-
-        this.timer = setTimeout(function() {
-            self.last5values = [ 0, 0, 0, 0, 0 ];
-            self.memoryAcceleration = [ 0, 0, 0 ];
+        self.timer = setTimeout(function() {
+            self.deltaArray = [ 0, 0, 0 ];
             self.isStopped = true;
-            self.isAcceleration = false;
-        }, 200);
+            self.direction = direction;
+        }, 150);
 
-        if(this.isStopped) {
+        //проверяем сколько из трех последних значений дельты соответствуют определенному направлению
+        for(i = 0; i < arrayLength; i++) {
+            if(self.deltaArray[i] !== 0) {
+                self.deltaArray[i] > 0 ? ++repeatDirection : --repeatDirection;
+            }
+        }
+
+        //если все три последних > 0 или все три < 0, значит произошла смена направления
+        if(Math.abs(repeatDirection) === arrayLength) {
+            //определяем тип устойчивого направления, т.е. направления при 3-х подрят положительных
+            //или отрицательных значений дельт
+            sustainableDirection = repeatDirection > 0 ? 'down' : 'up';
+
+            if(sustainableDirection !== self.direction) {
+                //произошла смена направления
+                changedDirection = true;
+                self.direction = direction;
+            }
+        }
+
+        //если колесо в движение и данное событие дельты не первое в массиве
+        if(!self.isStopped){
+            if(changedDirection) {
+                self.isAcceleration = true;
+                triggerEvent.call(this, event);
+            } else {
+                //делаем проверку если только направление движение стабильно в одну сторону
+                if(Math.abs(repeatDirection) === arrayLength) {
+                    //надо брать дельты, чтобы не получать баг
+                    //[-116, -109, -103]
+                    //[-109, -103, 1] - новый импульс
+
+                    analyzeArray.call(this, event);
+                }
+            }
+        }
+
+        //если колесо было остановлено и данное значение дельты первое в массиве
+        if(self.isStopped) {
+            self.isStopped = false;
+            self.isAcceleration = true;
+            self.direction = direction;
             triggerEvent.call(this, event);
-            this.isStopped = false;
-            this.isAcceleration = true;
-            stepAcceleration = 1;
+        }
 
-            this.memoryAcceleration.shift();
-            this.memoryAcceleration.push(stepAcceleration);
-        } else {
-            this.last5values.shift();
-            this.last5values.push(this.delta);
+        self.deltaArray.shift();
+        self.deltaArray.push(delta);
+    }
 
-            for(i = 5; i--; i == 1) {
-                if(this.last5values[i - 1] < this.last5values[i]) {
-                    stepAcceleration++;
-                }
+    function analyzeArray(event) {
+        var
+            deltaArray0Abs  = Math.abs(this.deltaArray[0]),
+            deltaArray1Abs  = Math.abs(this.deltaArray[1]),
+            deltaArray2Abs  = Math.abs(this.deltaArray[2]),
+            deltaAbs        = Math.abs(event.deltaY);
+
+        if((deltaAbs       > deltaArray2Abs) &&
+           (deltaArray2Abs > deltaArray1Abs) &&
+           (deltaArray1Abs > deltaArray0Abs)) {
+
+            if(!this.isAcceleration) {
+                triggerEvent.call(this, event);
+                this.isAcceleration = true;
             }
+        }
 
-            this.memoryAcceleration.shift();
-            this.memoryAcceleration.push(stepAcceleration);
-
-            if( (this.memoryAcceleration[2] < this.memoryAcceleration[1]) &&
-                (this.memoryAcceleration[1] < this.memoryAcceleration[0])) {
-                //Произошло затухание
-                this.isAcceleration = false;
-            }
-
-            if( (this.memoryAcceleration[2] > this.memoryAcceleration[1]) &&
-                (this.memoryAcceleration[1] > this.memoryAcceleration[0])) {
-                //Произошло ускорение
-                if(!this.isAcceleration) {
-                    this.isAcceleration = true;
-                    triggerEvent.call(this, event);
-                }
-            }
+        if((deltaAbs < deltaArray2Abs) &&
+            (deltaArray2Abs <= deltaArray1Abs)) {
+            this.isAcceleration = false;
         }
     }
 
