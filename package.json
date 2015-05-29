@@ -1,6 +1,6 @@
 {
   "name": "wheel-indicator",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "normalizes an inertial mousewheel",
   "main": "lib/wheel-indicator",
   "repository": {
