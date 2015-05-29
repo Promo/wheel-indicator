@@ -1,9 +1,11 @@
 /**
  * Generates event when user makes new movement (like a swipe on a touchscreen).
- * @version 1.0.2
+ * @version 1.0.3
  * @link https://github.com/Promo/wheel-indicator
  * @license MIT
  */
+
+/* global module, window, document */
 
 var WheelIndicator = (function(win, doc) {
     function extend ( defaults, options ) {
@@ -27,20 +29,19 @@ var WheelIndicator = (function(win, doc) {
 
     var eventWheel = 'onwheel' in doc ? 'wheel' : 'mousewheel',
 
-    DEFAULTS = {
-        callback: function(){},
-        elem: doc,
-        preventMouse: true
-    };
+        DEFAULTS = {
+            callback: function(){},
+            elem: doc,
+            preventMouse: true
+        };
 
     function Module(options){
         this._options = extend(DEFAULTS, options);
-        this.deltaArray = [ 0, 0, 0 ];
-        this.isAcceleration = false;
-        this.isStopped = true;
-        this.direction = '';
-        this.delta = '';
-        this.timer = '';
+        this._deltaArray = [ 0, 0, 0 ];
+        this._isAcceleration = false;
+        this._isStopped = true;
+        this._direction = '';
+        this._timer = '';
         this._isWorking = true;
 
         var self = this;
@@ -85,12 +86,12 @@ var WheelIndicator = (function(win, doc) {
     };
 
     function triggerEvent(event){
-        event.direction = this.direction;
+        event.direction = this._direction;
 
         this._options.callback.call(this, event);
     }
 
-    function getDeltaY(event){
+    var getDeltaY = function(event){
         if(event.wheelDelta) {
             getDeltaY = function(event) {
                 return event.wheelDelta;
@@ -101,7 +102,7 @@ var WheelIndicator = (function(win, doc) {
             }
         }
         return getDeltaY(event);
-    }
+    };
 
     function preventDefault(event){
         event = event || win.event;
@@ -118,23 +119,23 @@ var WheelIndicator = (function(win, doc) {
             self = this,
             delta = event.deltaY,
             direction = event.deltaY > 0 ? 'down' : 'up',
-            arrayLength = self.deltaArray.length,
+            arrayLength = self._deltaArray.length,
             changedDirection = false,
             repeatDirection = 0,
             sustainableDirection, i;
 
-        clearTimeout(self.timer);
+        clearTimeout(self._timer);
 
-        self.timer = setTimeout(function() {
-            self.deltaArray = [ 0, 0, 0 ];
-            self.isStopped = true;
-            self.direction = direction;
+        self._timer = setTimeout(function() {
+            self._deltaArray = [ 0, 0, 0 ];
+            self._isStopped = true;
+            self._direction = direction;
         }, 150);
 
         //проверяем сколько из трех последних значений дельты соответствуют определенному направлению
         for(i = 0; i < arrayLength; i++) {
-            if(self.deltaArray[i] !== 0) {
-                self.deltaArray[i] > 0 ? ++repeatDirection : --repeatDirection;
+            if(self._deltaArray[i] !== 0) {
+                self._deltaArray[i] > 0 ? ++repeatDirection : --repeatDirection;
             }
         }
 
@@ -144,17 +145,17 @@ var WheelIndicator = (function(win, doc) {
             //или отрицательных значений дельт
             sustainableDirection = repeatDirection > 0 ? 'down' : 'up';
 
-            if(sustainableDirection !== self.direction) {
+            if(sustainableDirection !== self._direction) {
                 //произошла смена направления
                 changedDirection = true;
-                self.direction = direction;
+                self._direction = direction;
             }
         }
 
         //если колесо в движение и данное событие дельты не первое в массиве
-        if(!self.isStopped){
+        if(!self._isStopped){
             if(changedDirection) {
-                self.isAcceleration = true;
+                self._isAcceleration = true;
                 triggerEvent.call(this, event);
             } else {
                 //делаем проверку если только направление движение стабильно в одну сторону
@@ -169,37 +170,37 @@ var WheelIndicator = (function(win, doc) {
         }
 
         //если колесо было остановлено и данное значение дельты первое в массиве
-        if(self.isStopped) {
-            self.isStopped = false;
-            self.isAcceleration = true;
-            self.direction = direction;
+        if(self._isStopped) {
+            self._isStopped = false;
+            self._isAcceleration = true;
+            self._direction = direction;
             triggerEvent.call(this, event);
         }
 
-        self.deltaArray.shift();
-        self.deltaArray.push(delta);
+        self._deltaArray.shift();
+        self._deltaArray.push(delta);
     }
 
     function analyzeArray(event) {
         var
-            deltaArray0Abs  = Math.abs(this.deltaArray[0]),
-            deltaArray1Abs  = Math.abs(this.deltaArray[1]),
-            deltaArray2Abs  = Math.abs(this.deltaArray[2]),
+            deltaArray0Abs  = Math.abs(this._deltaArray[0]),
+            deltaArray1Abs  = Math.abs(this._deltaArray[1]),
+            deltaArray2Abs  = Math.abs(this._deltaArray[2]),
             deltaAbs        = Math.abs(event.deltaY);
 
         if((deltaAbs       > deltaArray2Abs) &&
-           (deltaArray2Abs > deltaArray1Abs) &&
-           (deltaArray1Abs > deltaArray0Abs)) {
+            (deltaArray2Abs > deltaArray1Abs) &&
+            (deltaArray1Abs > deltaArray0Abs)) {
 
-            if(!this.isAcceleration) {
+            if(!this._isAcceleration) {
                 triggerEvent.call(this, event);
-                this.isAcceleration = true;
+                this._isAcceleration = true;
             }
         }
 
         if((deltaAbs < deltaArray2Abs) &&
             (deltaArray2Abs <= deltaArray1Abs)) {
-            this.isAcceleration = false;
+            this._isAcceleration = false;
         }
     }
 

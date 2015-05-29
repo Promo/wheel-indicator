@@ -8,15 +8,77 @@
     <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
     <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
     <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
+    <link rel="stylesheet" href="./stylesheets/font-awesome.min.css">
 
-    <style>
-      .customZone {
-        width: 200px;
-        height: 200px;
-        border: 1px solid #000;
-        overflow: auto;
-      }
-    </style>
+    <script src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+
+    <script>
+      var app = {
+        init: function(){
+          this.collectData();
+
+          var self = this,
+                  dir = '';
+
+          document.querySelector('#res').addEventListener('wheel', function(e){
+            var delta = self.getDeltaY(e);
+
+            self.draw(delta);
+
+            self.delts.push(delta);
+
+            self.$res.val('var deltasArr = [' + self.delts + '];');
+          }, false);
+
+          new WheelIndicator({
+            elem: document.querySelector('#res'),
+            callback: function(e){
+              dir = 'fa fa-arrow-' + e.direction;
+
+              self.$dir.append('<i class="' + dir + '"></i>');
+            }
+          });
+        },
+
+        collectData: function(){
+          this.delts = [];
+          this.times = [];
+          this.$dir = $('.direction');
+          this.$res = $('.result');
+          this.$graph = $('.graph');
+          this.lastTime = new Date();
+          this.curTime = false;
+
+          this.i = 0;
+        },
+
+        getDeltaY: function(event){
+          if(event.wheelDelta) {
+            getDeltaY = function(event) {
+              return event.wheelDelta;
+            }
+          } else {
+            getDeltaY = function(event) {
+              return event.deltaY;
+            }
+          }
+          return getDeltaY(event);
+        },
+
+        draw: function(delta){
+          this.i++;
+
+          var dot = $('<div class="dot" style="left: ' + this.i + 'px; top: ' + (delta * 1.5) + 'px"></div>');
+
+          this.$graph.css('left', (this.i * -1)).append(dot);
+        }
+
+      };
+
+      $(document).ready(function(){
+        app.init();
+      });
+    </script>
 
     <script src="http://promo.github.io/wheel-indicator/js/wheel-indicator.js"></script>
   </head>
@@ -76,6 +138,18 @@ indicator.getOption('preventMouse'); // true
           }
         });
       </script>
+
+
+      <h3>Hover, wheel and see deltaY</h3>
+      <textarea class="result" name="res" id="res" readonly></textarea>
+
+      <h4>Direction</h4>
+      <div class="direction"></div>
+
+      <!--<h3>TRACKING</h3>-->
+      <div class="graph_wrap">
+        <div class="graph"></div>
+      </div>
 
       <footer class="site-footer">
         <span class="site-footer-owner"><a href="https://github.com/Promo/wheel-indicator">Wheel-indicator</a> maintaining by <a href="https://github.com/Promo">Promo</a>.</span>
