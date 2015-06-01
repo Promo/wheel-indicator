@@ -77,6 +77,7 @@ describe('Options', function(){
             }
         };
 
+        delete require.cache[require.resolve('../lib/wheel-indicator')];
         var WheelIndicator = require('../lib/wheel-indicator');
 
         new WheelIndicator({

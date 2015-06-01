@@ -48,6 +48,7 @@ describe('Algorithm', function() {
         }
     };
 
+    delete require.cache[require.resolve('../lib/wheel-indicator')];
     var WheelIndicator = require('../lib/wheel-indicator');
 
     Object.keys(testData).forEach(function(key){
