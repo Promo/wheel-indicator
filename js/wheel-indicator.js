@@ -1,6 +1,6 @@
 /**
  * Generates event when user makes new movement (like a swipe on a touchscreen).
- * @version 1.0.3
+ * @version 1.0.4
  * @link https://github.com/Promo/wheel-indicator
  * @license MIT
  */
@@ -92,15 +92,16 @@ var WheelIndicator = (function(win, doc) {
     }
 
     var getDeltaY = function(event){
-        if(event.wheelDelta) {
+        if (event.wheelDelta) {
             getDeltaY = function(event) {
-                return event.wheelDelta;
-            }
+                return event.wheelDelta * -1;
+            };
         } else {
             getDeltaY = function(event) {
                 return event.deltaY;
-            }
+            };
         }
+
         return getDeltaY(event);
     };
 
@@ -117,8 +118,8 @@ var WheelIndicator = (function(win, doc) {
     function processDelta(event) {
         var
             self = this,
-            delta = event.deltaY,
-            direction = event.deltaY > 0 ? 'down' : 'up',
+            delta = getDeltaY(event),
+            direction = delta > 0 ? 'down' : 'up',
             arrayLength = self._deltaArray.length,
             changedDirection = false,
             repeatDirection = 0,
@@ -152,10 +153,11 @@ var WheelIndicator = (function(win, doc) {
             }
         }
 
-        //если колесо в движение и данное событие дельты не первое в массиве
+        //если колесо в движении и данное событие дельты не первое в массиве
         if(!self._isStopped){
             if(changedDirection) {
                 self._isAcceleration = true;
+
                 triggerEvent.call(this, event);
             } else {
                 //делаем проверку если только направление движение стабильно в одну сторону
@@ -174,6 +176,7 @@ var WheelIndicator = (function(win, doc) {
             self._isStopped = false;
             self._isAcceleration = true;
             self._direction = direction;
+
             triggerEvent.call(this, event);
         }
 
@@ -186,7 +189,7 @@ var WheelIndicator = (function(win, doc) {
             deltaArray0Abs  = Math.abs(this._deltaArray[0]),
             deltaArray1Abs  = Math.abs(this._deltaArray[1]),
             deltaArray2Abs  = Math.abs(this._deltaArray[2]),
-            deltaAbs        = Math.abs(event.deltaY);
+            deltaAbs        = Math.abs(getDeltaY(event));
 
         if((deltaAbs       > deltaArray2Abs) &&
             (deltaArray2Abs > deltaArray1Abs) &&
