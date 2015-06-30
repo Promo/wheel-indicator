@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="../lib/wheel-indicator.js"></script>
+    <style>
+        .error-message {
+            color: red;
+        }
+        .success-message {
+            color: green;
+        }
+    </style>
+</head>
+<body>
+Custom block indicator
+<div class="info" id="info"></div>
+<script>
+    var results = [];
+    var indicator = new WheelIndicator({
+        callback: function(e){
+            console.error(e.direction);
+            results.push(e.direction)
+        },
+        preventMouse: false
+    });
+
+
+    var tests = {
+        macos: {
+            ya: {
+                name: 'test1',
+                discription: '3 подряд движения вниз',
+                times: [1000, 8, 7, 8, 9, 17, 16, 16, 17, 16, 17, 17, 16, 17, 17, 16, 17, 16, 65, 7, 8, 8, 8, 8, 12, 14, 16, 18, 17, 16, 17, 17, 17, 17, 19, 16, 45, 7, 11, 5, 16, 2, 15, 18, 15, 16, 18, 16, 16, 18, 16, 17, 17, 16, 18, 16, 16, 17, 17, 16, 16, 18, 17, 15, 18, 22, 11, 17, 16, 18, 16, 16, 18, 16, 20, 14, 17, 15, 17, 17, 17, 16, 16, 18, 16, 33, 16, 34],
+                values: [1, 2, 5, 3, 9, 9, 9, 9, 10, 10, 9, 9, 8, 7, 7, 6, 5, 5, 1, 2, 3, 7, 4, 9, 20, 20, 25, 26, 26, 25, 24, 23, 21, 19, 18, 16, 1, 4, 6, 9, 9, 21, 22, 22, 27, 26, 26, 24, 23, 21, 19, 18, 16, 15, 13, 12, 11, 10, 9, 8, 7, 7, 6, 6, 5, 4, 4, 4, 4, 3, 3, 3, 2, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+                result: [ 'down', 'down', 'down' ]
+            }
+        }
+    };
+
+    startTest(tests.macos.ya);
+
+    function startTest(test) {
+
+        var message;
+        var errors = false;
+        var l = test.values.length;
+        var infoBlock = document.querySelector('.info');
+
+        for(var i = 0; i < l; i++) {
+            indicator.processDelta({ deltaY: test.values[i] }, test.times[i] );
+        }
+
+        if(test.result.length !== results.length) {
+            errors = true;
+        }
+
+        test.result.forEach(function(item, i){
+            console.log(item);
+            if(item !== results[i]) {
+                errors = true;
+            }
+        });
+
+        if(errors) {
+            message = '<div class="error-message">Тест ' + test.name + ' завершен с ошибкой</div>'
+        } else {
+            message = '<div class="success-message">Тест ' + test.name + ' завершен без ошибок</div>'
+        }
+
+
+        infoBlock.innerHTML += message;
+        results = [];
+
+    }
+
+
+</script>
+</body>
+</html>
