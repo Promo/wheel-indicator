@@ -133,9 +133,9 @@ Custom block indicator
         var ya = tests.macos.ya;
 
         console.log(tests.macos.ya);
-//        for(item in tests.macos.ya) {
-//            startTest(ya[item]);
-//        }
+        for(item in tests.macos.ya) {
+            startTest(ya[item]);
+        }
         $('html').on('click', function(){
             $('body').html("<pre>" +
                     "times:  [" + indicator._timesArray + "],\n\t\t" +
