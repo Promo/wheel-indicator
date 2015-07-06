@@ -3,3 +3,8 @@ node_js:
   - '0.12'
 after_script:
   - npm run tests
+  
+# blacklist
+branches:
+  except:
+    - v2
