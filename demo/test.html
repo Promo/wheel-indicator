@@ -114,6 +114,7 @@
 
     </script>
     <script src="tests/macos.ya.js"></script>
+    <script src="tests/macos.ff.js"></script>
     <style>
         .error-message {
             color: red;
@@ -131,10 +132,11 @@ Custom block indicator
 <script>
     $(document).ready(function(){
         var ya = tests.macos.ya;
+        var ff = tests.macos.ff;
 
-        console.log(tests.macos.ya);
-        for(item in tests.macos.ya) {
-            startTest(ya[item]);
+        console.log(tests.macos.ff);
+        for(item in tests.macos.ff) {
+            startTest(ff[item]);
         }
         $('html').on('click', function(){
             $('body').html("<pre>" +

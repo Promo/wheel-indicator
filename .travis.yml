@@ -7,4 +7,4 @@ after_script:
 # blacklist
 branches:
   except:
-    - v2
+  - v2
