@@ -43,6 +43,7 @@ var WheelIndicator = require('wheel-indicator');
 | `turnOn()` | Turn on callback trigerring |
 | `setOptions( options )` | Sets the mutable options. The only argument must be `Object`. |
 | `getOption( 'option' )` | Returns option value. The only argument must be `String`. |
+| `destroy( )` | Removes event listener. |
 
 [travis-url]: http://travis-ci.org/Promo/wheel-indicator
 [travis-image]: http://img.shields.io/travis/Promo/wheel-indicator.svg?branch=master&style=flat
