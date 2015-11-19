@@ -1,0 +1,27 @@
+{
+  "name": "wheel-indicator",
+  "description": "normalizes an inertial mousewheel",
+  "main": "lib/wheel-indicator",
+  "authors": [
+    "Anton Grischenko <f0rmateg@yandex.ru>"
+  ],
+  "license": "MIT",
+  "keywords": [
+    "wheel",
+    "mousewheel",
+    "normalize",
+    "scroll"
+  ],
+  "homepage": "https://github.com/Promo/wheel-indicator",
+  "moduleType": [
+    "amd",
+    "globals"
+  ],
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
