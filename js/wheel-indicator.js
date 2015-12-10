@@ -1,6 +1,6 @@
 /**
  * Generates event when user makes new movement (like a swipe on a touchscreen).
- * @version 1.0.4
+ * @version 1.1.1
  * @link https://github.com/Promo/wheel-indicator
  * @license MIT
  */
@@ -8,30 +8,11 @@
 /* global module, window, document */
 
 var WheelIndicator = (function(win, doc) {
-    function extend ( defaults, options ) {
-        var extended = {},
-            prop;
-
-        for (prop in defaults) {
-            if (Object.prototype.hasOwnProperty.call(defaults, prop)) {
-                extended[prop] = defaults[prop];
-            }
-        }
-
-        for (prop in options) {
-            if (Object.prototype.hasOwnProperty.call(options, prop)) {
-                extended[prop] = options[prop];
-            }
-        }
-
-        return extended;
-    }
-
     var eventWheel = 'onwheel' in doc ? 'wheel' : 'mousewheel',
 
         DEFAULTS = {
             callback: function(){},
-            elem: doc,
+            elem: win,
             preventMouse: true
         };
 
@@ -45,18 +26,21 @@ var WheelIndicator = (function(win, doc) {
         this._isWorking = true;
 
         var self = this;
-
-        addEvent(this._options.elem, eventWheel, function(event) {
+        this._wheelHandler = function(event) {
             if (self._isWorking) {
                 processDelta.call(self, event);
 
-                if (self._options.preventMouse) preventDefault(event);
+                if (self._options.preventMouse) {
+                  preventDefault(event);
+                }
             }
-        });
+        };
+
+        addEvent(this._options.elem, eventWheel, this._wheelHandler);
     }
 
     Module.prototype = {
-        Constructor: Module,
+        constructor: Module,
 
         turnOn: function(){
             this._isWorking = true;
@@ -79,9 +63,17 @@ var WheelIndicator = (function(win, doc) {
         getOption: function(option){
             var neededOption = this._options[option];
 
-            if (neededOption !== undefined) return neededOption;
+            if (neededOption !== undefined) {
+              return neededOption;
+            }
 
             throw new Error('Unknown option');
+        },
+
+        destroy: function(){
+            removeEvent(this._options.elem, eventWheel, this._wheelHandler);
+
+            return this;
         }
     };
 
@@ -101,7 +93,7 @@ var WheelIndicator = (function(win, doc) {
                 return event.deltaY;
             };
         }
-
+        //return x3 for ya
         return getDeltaY(event);
     };
 
@@ -118,8 +110,11 @@ var WheelIndicator = (function(win, doc) {
     function processDelta(event) {
         var
             self = this,
-            delta = getDeltaY(event),
-            direction = delta > 0 ? 'down' : 'up',
+            delta = getDeltaY(event);
+
+        if (delta === 0) return;
+
+        var direction = delta > 0 ? 'down' : 'up',
             arrayLength = self._deltaArray.length,
             changedDirection = false,
             repeatDirection = 0,
@@ -133,45 +128,45 @@ var WheelIndicator = (function(win, doc) {
             self._direction = direction;
         }, 150);
 
-        //проверяем сколько из трех последних значений дельты соответствуют определенному направлению
+        //check how many of last three deltas correspond to certain direction
         for(i = 0; i < arrayLength; i++) {
             if(self._deltaArray[i] !== 0) {
                 self._deltaArray[i] > 0 ? ++repeatDirection : --repeatDirection;
             }
         }
 
-        //если все три последних > 0 или все три < 0, значит произошла смена направления
+        //if all of last three deltas is greater than 0 or lesser than 0 then direction is switched
         if(Math.abs(repeatDirection) === arrayLength) {
-            //определяем тип устойчивого направления, т.е. направления при 3-х подрят положительных
-            //или отрицательных значений дельт
+            //determine type of sustainable direction
+            //(three positive or negative deltas in a row)
             sustainableDirection = repeatDirection > 0 ? 'down' : 'up';
 
             if(sustainableDirection !== self._direction) {
-                //произошла смена направления
+                //direction is switched
                 changedDirection = true;
                 self._direction = direction;
             }
         }
 
-        //если колесо в движении и данное событие дельты не первое в массиве
+        //if wheel`s moving and current event is not the first in array
         if(!self._isStopped){
             if(changedDirection) {
                 self._isAcceleration = true;
 
                 triggerEvent.call(this, event);
             } else {
-                //делаем проверку если только направление движение стабильно в одну сторону
+                //check only if movement direction is sustainable
                 if(Math.abs(repeatDirection) === arrayLength) {
-                    //надо брать дельты, чтобы не получать баг
+                    //must take deltas to don`t get a bug
                     //[-116, -109, -103]
-                    //[-109, -103, 1] - новый импульс
+                    //[-109, -103, 1] - new impulse
 
                     analyzeArray.call(this, event);
                 }
             }
         }
 
-        //если колесо было остановлено и данное значение дельты первое в массиве
+        //if wheel is stopped and current delta value is the first in array
         if(self._isStopped) {
             self._isStopped = false;
             self._isAcceleration = true;
@@ -208,11 +203,38 @@ var WheelIndicator = (function(win, doc) {
     }
 
     function addEvent(elem, type, handler){
-        if(win.addEventListener) {
+        if(elem.addEventListener) {
             elem.addEventListener(type, handler, false);
-        } else if (win.attachEvent) {
+        } else if (elem.attachEvent) {
             elem.attachEvent('on' + type, handler);
         }
+    }
+
+    function removeEvent(elem, type, handler) {
+        if (elem.removeEventListener) {
+            elem.removeEventListener(type, handler, false);
+        } else if (elem.detachEvent) {
+            elem.detachEvent('on'+ type, handler);
+        }
+    }
+
+    function extend(defaults, options) {
+        var extended = {},
+            prop;
+
+        for (prop in defaults) {
+            if (Object.prototype.hasOwnProperty.call(defaults, prop)) {
+                extended[prop] = defaults[prop];
+            }
+        }
+
+        for (prop in options) {
+            if (Object.prototype.hasOwnProperty.call(options, prop)) {
+                extended[prop] = options[prop];
+            }
+        }
+
+        return extended;
     }
 
     return Module;
