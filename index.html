@@ -53,15 +53,19 @@
         },
 
         getDeltaY: function(event){
-          if(event.wheelDelta) {
+
+          if(event.wheelDelta && !event.deltaY) {
             getDeltaY = function(event) {
-              return event.wheelDelta;
-            }
+              console.log(event.wheelDelta * -1, ' - event.wheelDelta * -1');
+              return event.wheelDelta * -1;
+            };
           } else {
             getDeltaY = function(event) {
+              console.log(event.deltaY, ' - event.deltaY');
               return event.deltaY;
-            }
+            };
           }
+
           return getDeltaY(event);
         },
 
