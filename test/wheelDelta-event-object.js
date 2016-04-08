@@ -60,7 +60,7 @@ describe('wheelDelta event object', function() {
             });
         }
     };
-    console.log('afff');
+
     delete require.cache[require.resolve('../lib/wheel-indicator')];
     WheelIndicator = require('../lib/wheel-indicator');
 });
