@@ -1,7 +1,7 @@
 {
   "name": "wheel-indicator",
   "description": "normalizes an inertial mousewheel",
-  "main": "lib/wheel-indicator",
+  "main": "lib/wheel-indicator.js",
   "authors": [
     "Anton Grischenko <f0rmateg@yandex.ru>"
   ],
