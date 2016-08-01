@@ -9,7 +9,7 @@ Generates event when user makes new movement (like a `touchstart` on a touchscre
 ```bash
 npm i -S wheel-indicator
 ```
-or oldschool method
+or oldschool method:
 ```html
 <script src="wheel-indicator.js"></script>
 ```
@@ -41,11 +41,11 @@ indicator.getOption('preventMouse'); // true
 ### Instance methods
 | Method | Description |
 | ------- | ------- | ---------------------------------------- |
-| `turnOff()` | Turn off callback triggering |
-| `turnOn()` | Turn on callback trigerring |
-| `setOptions( options )` | Sets the mutable options. The only argument must be `Object`. |
-| `getOption( 'option' )` | Returns option value. The only argument must be `String`. |
-| `destroy( )` | Removes event listener. |
+| `turnOff()` | Turn off callback triggering. |
+| `turnOn()` | Turn on callback trigerring. |
+| `setOptions(options)` | Sets the mutable options. The only argument must be `Object`. |
+| `getOption('option')` | Returns option value. The only argument must be `String`. |
+| `destroy()` | Removes event listener. |
 
 [travis-url]: http://travis-ci.org/Promo/wheel-indicator
 [travis-image]: http://img.shields.io/travis/Promo/wheel-indicator.svg?branch=master&style=flat
