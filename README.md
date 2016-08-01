@@ -5,26 +5,28 @@ Generates event when user makes new movement (like a `touchstart` on a touchscre
 
 ![trackpad](https://cloud.githubusercontent.com/assets/769992/7619952/b77d9ce6-f9d5-11e4-8ed1-bc01dd972092.jpg)
 
-## Connection
+## Installing
+```bash
+npm i -S wheel-indicator
+```
+or oldschool method
 ```html
 <script src="wheel-indicator.js"></script>
-```
-or if you use build system:
-```javascript
-var WheelIndicator = require('wheel-indicator');
 ```
 
 ## Usage
 ```javascript
-  var indicator = new WheelIndicator({
-    elem: document.querySelector('.element'),
-    callback: function(e){
-      console.log(e.direction) // "up" or "down"
-    }
-  });
+var WheelIndicator = require('wheel-indicator'); // ← if you use build system
 
-  //The method call
-  indicator.getOption('preventMouse'); // true
+var indicator = new WheelIndicator({
+  elem: document.querySelector('.element'),
+  callback: function(e){
+    console.log(e.direction) // "up" or "down"
+  }
+});
+
+//The method call
+indicator.getOption('preventMouse'); // true
 ```
 
 ## API
