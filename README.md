@@ -1,5 +1,5 @@
 # wheel-indicator
-Generates event when user makes new movement (like a `touchstart` on a touchscreen).
+Indicates when user makes swipe gesture on a trackpad or mouse wheel.
 
 [![Build Status][travis-image]][travis-url]
 
