@@ -34,15 +34,15 @@ indicator.getOption('preventMouse'); // true
 ### Options
 | Field | Type | Default value | Mutable (by `setOptions()`) | Description |
 | ------- | --------- | ----------- | ---- | ---------------------------------------- |
-| `elem` | `Object` (dom node) | `document` | No | Dom node to listen `wheel` event on. |
+| `elem` | `Object` (dom node) | `document` | No | DOM node to listen `wheel` event on. |
 | `callback` | `Function` | - | Yes | The callback, which will be triggered on gesture. Gets for the first argument a native `wheel` event object, extended by `direction` property, taking value `'up'` or `'down'`. |
-| `preventMouse` | `Bool` | `true` | Yes | Disables mouse wheel working. In other words apply `preventDefault()` to `wheel` event. | 
+| `preventMouse` | `Bool` | `true` | Yes | Disables mouse wheel working. In other words applies `preventDefault()` to `wheel` event. | 
 
 ### Instance methods
 | Method | Description |
 | ------- | ------- | ---------------------------------------- |
-| `turnOff()` | Turn off callback triggering. |
-| `turnOn()` | Turn on callback trigerring. |
+| `turnOff()` | Turns off callback triggering. |
+| `turnOn()` | Turns on callback trigerring. |
 | `setOptions(options)` | Sets the mutable options. The only argument must be `Object`. |
 | `getOption('option')` | Returns option value. The only argument must be `String`. |
 | `destroy()` | Removes event listener. |
