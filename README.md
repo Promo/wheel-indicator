@@ -40,7 +40,7 @@ indicator.getOption('preventMouse'); // true
 
 ### Instance methods
 | Method | Description |
-| ------- | ------- | ---------------------------------------- |
+| ------- | ---------------------------------------- |
 | `turnOff()` | Turns off callback triggering. |
 | `turnOn()` | Turns on callback trigerring. |
 | `setOptions(options)` | Sets the mutable options. The only argument must be `Object`. |
