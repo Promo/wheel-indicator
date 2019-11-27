@@ -27,5 +27,6 @@
     "mocha": "^2.2.5",
     "should": "^5.0.1"
   },
-  "homepage": "https://github.com/Promo/wheel-indicator"
+  "homepage": "https://github.com/Promo/wheel-indicator",
+  "types": "index.d.ts"
 }
